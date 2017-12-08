@@ -26,8 +26,16 @@ public class GameStatistics {
 		accuracy = 0;
 	}
 
+	public int getNumOfRoundsWon() {
+		return numOfRoundsWon;
+	}
+
 	public int getNumOfTargetsShot() {
 		return numOfTargetsShot;
+	}
+
+	public int getNumOfRoundsPlayed() {
+		return numOfRoundsPlayed;
 	}
 
 	public void setNumOfTargetsShot(int numOfTargetsShot) {

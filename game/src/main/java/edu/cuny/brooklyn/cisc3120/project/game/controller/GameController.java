@@ -3,6 +3,7 @@ package edu.cuny.brooklyn.cisc3120.project.game.controller;
 import edu.cuny.brooklyn.cisc3120.project.game.TargetGameApp;
 import edu.cuny.brooklyn.cisc3120.project.game.model.DecisionWrapper;
 import edu.cuny.brooklyn.cisc3120.project.game.model.DecisionWrapper.UserDecision;
+import edu.cuny.brooklyn.cisc3120.project.game.model.GameStatistics;
 import edu.cuny.brooklyn.cisc3120.project.game.model.GameStatistics.StatNameValue;
 import edu.cuny.brooklyn.cisc3120.project.game.model.Shot;
 import edu.cuny.brooklyn.cisc3120.project.game.model.TargetGame;
@@ -27,11 +28,13 @@ import javafx.util.StringConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.*;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
+import javax.net.ssl.HttpsURLConnection;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -134,20 +137,21 @@ public class GameController {
 	}
 
 	@FXML
-	String pushToTheWeb(ActionEvent event) throws IOException {
-		String data = "test";
-		URL url = new URL("http://localhost:8443/gpa/save?data=" + data);
-		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+	void pushToTheWeb(ActionEvent event) throws IOException, KeyManagementException, NoSuchAlgorithmException {
+		GameStatistics stats = targetGame.getGameStatistics();
+		String data = "%7B%22numOfTargetsShot%22%3A" + stats.getNumOfTargetsShot() +
+				"%2C%22numOfShotsFired%22%3A" + stats.getNumOfShotsFired() +
+				"%2C%22numOfTargetsMade%22%3A" + stats.getNumOfTargetsMade() +
+				"%2C%22numOfRoundsWon%22%3A" + stats.getNumOfRoundsWon() +
+				"%2C%22numOfRoundsPlayed%22%3A" + stats.getNumOfRoundsPlayed() + "%7D";
+		System.out.println(data);
+		URL url = new URL("https://localhost:8443/gpa/save?data=" + data);
+		HttpsURLConnection conn = (HttpsURLConnection) url.openConnection();
+		conn.setHostnameVerifier((hostname, sslSession) -> true);
 
 		conn.setRequestMethod("GET");
-		BufferedReader rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-		String line;
-		StringBuilder result = new StringBuilder();
-		while ((line = rd.readLine()) != null) {
-			result.append(line);
-		}
-		rd.close();
-		return result.toString();
+
+		System.out.println(conn.getResponseCode());
 	}
 
 	private void exitGame(Event event) {
