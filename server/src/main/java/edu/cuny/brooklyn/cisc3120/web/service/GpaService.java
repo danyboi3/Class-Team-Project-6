@@ -99,7 +99,7 @@ public class GpaService {
         return gpa;
     }
 
-    public void saveString(String data) {
+    public void saveString(StringModel data) {
         stringRepository.save(data);
     }
 }

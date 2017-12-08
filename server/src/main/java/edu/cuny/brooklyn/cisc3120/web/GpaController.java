@@ -1,5 +1,6 @@
 package edu.cuny.brooklyn.cisc3120.web;
 
+import edu.cuny.brooklyn.cisc3120.web.service.StringModel;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -90,9 +91,11 @@ public class GpaController {
         return "courseadded";
     }
 
-    @RequestMapping(value="/save", method=RequestMethod.POST)
+    @RequestMapping("/save")
     String save(@RequestParam("data") String data) {
-        gpaService.saveString(data);
+        System.out.println("Request: " + data);
+
+        gpaService.saveString(new StringModel(data));
 
         return "OK";
     }
