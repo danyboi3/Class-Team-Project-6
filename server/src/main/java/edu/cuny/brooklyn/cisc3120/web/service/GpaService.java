@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import edu.cuny.brooklyn.cisc3120.web.data.CourseRepository;
 import edu.cuny.brooklyn.cisc3120.web.data.GradePointRepository;
 import edu.cuny.brooklyn.cisc3120.web.data.StudentRepository;
+import edu.cuny.brooklyn.cisc3120.web.data.StringRepository;
 
 @Service
 public class GpaService {
@@ -25,16 +26,20 @@ public class GpaService {
     
     @Autowired
     private final StudentRepository studentRepository;
+
+    @Autowired
+    private final StringRepository stringRepository;
     
     Map<String, Double> gradePointsMap;
     
     @Autowired
     public GpaService(GradePointRepository gradePointRepository
             , StudentRepository studentRepository
-            , CourseRepository courseRepository) {
+            , CourseRepository courseRepository, StringRepository stringRepository) {
         this.gradePointRepository = gradePointRepository;
         this.studentRepository = studentRepository;
         this.courseRepository = courseRepository;
+        this.stringRepository = stringRepository;
         
         gradePointsMap = new HashMap<String, Double>();
         List<GradePoint> gradePointList =  this.gradePointRepository.findAll();
@@ -92,5 +97,9 @@ public class GpaService {
         }
         double gpa = accumulatedGradePoints / accumulatedCredits;
         return gpa;
+    }
+
+    public void saveString(String data) {
+        stringRepository.save(data);
     }
 }

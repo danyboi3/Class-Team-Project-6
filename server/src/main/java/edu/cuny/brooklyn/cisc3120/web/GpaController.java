@@ -2,10 +2,7 @@ package edu.cuny.brooklyn.cisc3120.web;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 
 import edu.cuny.brooklyn.cisc3120.web.exception.StudentNoCourseException;
 import edu.cuny.brooklyn.cisc3120.web.exception.StudentNotFoundException;
@@ -92,4 +89,12 @@ public class GpaController {
         LOGGER.info("Saved student: " + student.toString());
         return "courseadded";
     }
+
+    @RequestMapping(value="/save", method=RequestMethod.POST)
+    String save(@RequestParam("data") String data) {
+        gpaService.saveString(data);
+
+        return "OK";
+    }
+
 }
